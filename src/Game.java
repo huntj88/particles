@@ -13,7 +13,7 @@ public class Game extends JPanel implements Runnable,MouseMotionListener{
 
     public Game()
     {
-        particles.spawn(350);
+        particles.spawn(2350);
         addMouseMotionListener(this);
         new Thread(this).start();
     }

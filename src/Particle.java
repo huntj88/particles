@@ -9,7 +9,7 @@ public class Particle {
     private double mathX,mathY;
     private int size;
     private double xSpeed,ySpeed;
-    private double gravity=2.0;
+    private double gravity=1.0;
     private Color color;
     private ParticleTrail trail;
 

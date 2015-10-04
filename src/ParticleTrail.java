@@ -40,7 +40,7 @@ public class ParticleTrail {
             g2d.rotate(angle, x + size / 2, y + size / 2);
             //g2d.draw(rect2);
             //g2d.fill(rect2);
-            g2d.fillOval(x, y, (int) (Math.sqrt(xLength * xLength + yLength * yLength)*1.2), size);
+            g2d.fillOval(x, y, (int) (Math.sqrt(xLength * xLength + yLength * yLength)*size/3), size);
             g2d.dispose();
         }
     }

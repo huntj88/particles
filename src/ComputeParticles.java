@@ -24,7 +24,7 @@ public class ComputeParticles implements Runnable{
     public void spawn(int amount)
     {
         for(int i = 0;i<amount;i++)
-            particles.add(new Particle((int)(Math.random()*Launcher.WIDTH),(int)(Math.random()*Launcher.HEIGHT),(int)(Math.random()*Math.random()*Math.random()*10)+3));
+            particles.add(new Particle((int)(Math.random()*Launcher.WIDTH),(int)(Math.random()*Launcher.HEIGHT),(int)(Math.random()*Math.random()*Math.random()*5)+3));
     }
 
     public void addParticle(int x, int y, int size)
