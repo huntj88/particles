@@ -9,9 +9,10 @@ public class Particle {
     private double mathX,mathY;
     private int size;
     private double xSpeed,ySpeed;
-    private double gravity=1.0;
+    private double gravity=10;
     private Color color;
     private ParticleTrail trail;
+    private int maxSpeed=3;
 
     public Particle(int x, int y,int size)
     {
@@ -37,27 +38,31 @@ public class Particle {
     public void move(int mouseX,int mouseY)
     {
 
+        double yChangeSpeed;
+        double xChangeSpeed;
+
         if(mouseX-x==0)
             mouseX++;
         if(mouseY-y==0)
             mouseY++;
         double xAngle = Math.atan((double) (mouseY - y) / (double) (mouseX - x));
 
-        if(x>mouseX)
-            xSpeed = xSpeed - getXSpeed(xAngle, Math.abs(mouseX - x));
-        else
-            xSpeed = xSpeed + getXSpeed(xAngle, Math.abs(mouseX - x));
+        xChangeSpeed = getXSpeed(xAngle, Math.abs(mouseX - x));
+        yChangeSpeed = getYSpeed(xAngle,Math.abs(mouseY - y));
 
         if(x>mouseX)
-            ySpeed=ySpeed-getYSpeed(xAngle,Math.abs(mouseY - y));
+            xSpeed = xSpeed - xChangeSpeed;
         else
-            ySpeed=ySpeed+getYSpeed(xAngle,Math.abs(mouseY - y));
+            xSpeed = xSpeed + xChangeSpeed;
 
-        //if(Math.abs(xSpeed)>maxSpeed)
-            //System.out.println(xSpeed);
+        if(x>mouseX)
+            ySpeed=ySpeed-yChangeSpeed;
+        else
+            ySpeed=ySpeed+yChangeSpeed;
 
-        //if(Math.abs(xSpeed)>maxSpeed)
-            //System.out.println(ySpeed);
+        //updown(xChangeSpeed,yChangeSpeed);
+        cross();
+
 
         mathX+=xSpeed;
         mathY+=ySpeed;
@@ -78,6 +83,32 @@ public class Particle {
     private double getYSpeed(double angle,int distance)
     {
         return (Math.sin(angle) * (gravity/((double)distance/50.0+1)));
+    }
+
+    public void cross()
+    {
+        if(xSpeed>maxSpeed)
+            xSpeed--;
+        else if(xSpeed<-maxSpeed)
+            xSpeed++;
+
+        if(ySpeed>maxSpeed)
+            ySpeed--;
+        else if(ySpeed<-maxSpeed)
+            ySpeed++;
+    }
+
+    public void updown(double xChangeSpeed,double yChangeSpeed)
+    {
+        if(xSpeed>maxSpeed)
+            xSpeed-=xChangeSpeed;
+        else if(xSpeed<-maxSpeed)
+            xSpeed+=xChangeSpeed;
+
+        if(ySpeed>maxSpeed)
+            ySpeed-=yChangeSpeed;
+        else if(ySpeed<-maxSpeed)
+            ySpeed+=yChangeSpeed;
     }
 
     /*public int getX() {
