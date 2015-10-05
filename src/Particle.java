@@ -12,7 +12,7 @@ public class Particle {
     private double gravity=10;
     private Color color;
     private ParticleTrail trail;
-    private int maxSpeed=3;
+    private int maxSpeed=6;
 
     public Particle(int x, int y,int size)
     {
