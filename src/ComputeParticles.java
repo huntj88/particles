@@ -7,6 +7,8 @@ import java.util.ArrayList;
 public class ComputeParticles implements Runnable{
 
     ArrayList<Particle> particles = new ArrayList<>();
+    ArrayList<ParticleModifier> modifiers = new ArrayList<>();
+
     int mouseX,mouseY;
 
     public ComputeParticles()
@@ -19,6 +21,18 @@ public class ComputeParticles implements Runnable{
         this.mouseX=mouseX;
         this.mouseY=mouseY;
         //System.out.println(mouseX+" "+mouseY);
+    }
+
+    public void pressed()
+    {
+        //modifiers.add(new GravityWell(mouseX,mouseY));
+        //System.out.print("pressed");
+    }
+
+    public void released(double magnitude)
+    {
+        //System.out.print("released");
+        modifiers.add(new GravityWell(mouseX, mouseY, magnitude));
     }
 
     public void spawn(int amount)
@@ -36,6 +50,10 @@ public class ComputeParticles implements Runnable{
     {
         return particles;
     }
+    public ArrayList<ParticleModifier> getModifiers()
+    {
+        return modifiers;
+    }
 
     public void calculateParticleMoves()
     {
@@ -44,7 +62,7 @@ public class ComputeParticles implements Runnable{
 
         for(int i = 0;i<particles.size();i++)
         {
-            particles.get(i).move(mouseX,mouseY);
+            particles.get(i).move(mouseX,mouseY,modifiers);
         }
     }
 
@@ -53,7 +71,7 @@ public class ComputeParticles implements Runnable{
         while(true) {
 
             calculateParticleMoves();
-
+            System.out.println("game2");
             try {
                 Thread.sleep(40);
             } catch (InterruptedException e) {

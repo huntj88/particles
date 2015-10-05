@@ -1,4 +1,7 @@
+import com.sun.javafx.geom.Vec2f;
+
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by James on 10/3/2015.
@@ -12,7 +15,7 @@ public class Particle {
     private double gravity=10;
     private Color color;
     private ParticleTrail trail;
-    private int maxSpeed=6;
+    private int maxSpeed=3;
 
     public Particle(int x, int y,int size)
     {
@@ -35,44 +38,71 @@ public class Particle {
         }
     }
 
-    public void move(int mouseX,int mouseY)
+    public void move(int mouseX,int mouseY,ArrayList<ParticleModifier> modifiers)
     {
 
-        double yChangeSpeed;
-        double xChangeSpeed;
+        moveFromMouse(mouseX, mouseY);
+        moveFromModifiers(modifiers);
 
-        if(mouseX-x==0)
-            mouseX++;
-        if(mouseY-y==0)
-            mouseY++;
-        double xAngle = Math.atan((double) (mouseY - y) / (double) (mouseX - x));
-
-        xChangeSpeed = getXSpeed(xAngle, Math.abs(mouseX - x));
-        yChangeSpeed = getYSpeed(xAngle,Math.abs(mouseY - y));
-
-        if(x>mouseX)
-            xSpeed = xSpeed - xChangeSpeed;
-        else
-            xSpeed = xSpeed + xChangeSpeed;
-
-        if(x>mouseX)
-            ySpeed=ySpeed-yChangeSpeed;
-        else
-            ySpeed=ySpeed+yChangeSpeed;
-
-        //updown(xChangeSpeed,yChangeSpeed);
         cross();
-
 
         mathX+=xSpeed;
         mathY+=ySpeed;
 
         x=(int)mathX;
         y=(int)mathY;
-        /*x=400;
-        y=400;*/
 
         trail.updateTrail(x,y,xSpeed,ySpeed);
+    }
+
+    public double getAngle(int inputX,int inputY)
+    {
+        if(inputX-x==0)
+            inputX++;
+        if(inputY-y==0)
+            inputY++;
+        return Math.atan((double) (inputY - y) / (double) (inputX - x));
+    }
+
+    public void moveFromMouse(int mouseX,int mouseY)
+    {
+        double yChangeSpeed;
+        double xChangeSpeed;
+        double angle = getAngle(mouseX,mouseY);
+
+        xChangeSpeed = getXSpeed(angle, Math.abs(mouseX - x));
+        yChangeSpeed = getYSpeed(angle, Math.abs(mouseY - y));
+
+        quadFinalize(mouseX,mouseY,xChangeSpeed,yChangeSpeed);
+    }
+
+    public void moveFromModifiers(ArrayList<ParticleModifier> modifiers)
+    {
+        for(int i = 0; i<modifiers.size();i++) {
+            try {
+                double[] modifierData = modifiers.get(i).effect(getAngle(modifiers.get(i).getX(), modifiers.get(i).getY()), x, y);
+                quadFinalize(modifiers.get(i).getX(), modifiers.get(i).getY(), modifierData[0], modifierData[1]);
+            }
+            catch(NullPointerException e)
+            {
+                System.err.print("null pointer moveFromModifiers");
+            }
+        }
+    }
+
+    public void quadFinalize(int inputX,int inputY,double xChangeSpeed,double yChangeSpeed)
+    {
+        if(x>inputX)
+            xSpeed = xSpeed - xChangeSpeed;
+        else
+            xSpeed = xSpeed + xChangeSpeed;
+
+        if(x>inputX)
+            ySpeed=ySpeed-yChangeSpeed;
+        else
+            ySpeed=ySpeed+yChangeSpeed;
+
+        //updown(xChangeSpeed,yChangeSpeed);
     }
 
     private double getXSpeed(double angle,int distance)
